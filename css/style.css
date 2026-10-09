@@ -573,30 +573,14 @@ main, .footer { position: relative; z-index: 1; }
   /* Dar ekranda yan yana sığmaz: çizim grafiğin üstüne geçer */
   .product__visual,
   .product--reverse .product__visual { grid-template-columns: minmax(0, 1fr); }
+  .product__art,
   .product__visual .chart,
   .product__visual .legend,
+  .product--reverse .product__art,
   .product--reverse .product__visual .chart,
   .product--reverse .product__visual .legend { grid-column: 1; grid-row: auto; }
+  .product__art { height: min(70vw, 300px); margin-bottom: var(--spacing-24); }
   .product__text { margin-top: var(--spacing-60); }
-
-  /* Direk / türbin bölüm başlığının arkasına geçer; başlık çizimin tabanına oturur.
-     Çizim bölüme göre konumlanır (aradaki kutularda transform olmamalı). */
-  .product { --art-h: min(80vw, 340px); }
-  .product__head {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: var(--art-h);
-  }
-  .product__art {
-    position: absolute;
-    top: var(--section-y);
-    left: 0;
-    right: 0;
-    height: var(--art-h);
-  }
 }
 
 /* ---------- Neden POT ---------- */
@@ -639,18 +623,9 @@ main, .footer { position: relative; z-index: 1; }
 .approach__note { margin-top: var(--spacing-30); }
 
 @media (max-width: 900px) {
-  /* K2 yazısı metnin arkasına geçer: ikisi aynı hücrede üst üste */
   .approach__visual,
-  .approach__text { grid-column: 1; grid-row: 1; }
-  .approach__visual {
-    position: relative;
-    align-self: stretch;
-    height: auto;
-    /* Uzun metin okunaklı kalsın diye parçacıklar biraz geri çekilir */
-    opacity: 0.55;
-  }
-  .approach__visual canvas { position: absolute; inset: 0; }
-  .approach__text { position: relative; z-index: 1; }
+  .approach__text { grid-column: 1 / -1; }
+  .approach__visual { height: min(70vw, 380px); margin-bottom: var(--spacing-36); }
 }
 
 /* ---------- Referans ---------- */
