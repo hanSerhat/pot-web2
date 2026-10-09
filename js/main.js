@@ -34,6 +34,47 @@
     if (e.matches) setMenu(false);
   });
 
+  /* ---------- Menü harf animasyonu ----------
+     Bağlantı metni harflere bölünür; basınca harfler sırayla yukarı
+     yuvarlanır ve alttaki kopyaları yerine gelir (Dala gibi). */
+  function splitChars(link) {
+    var text = link.textContent.trim(), i = 0;
+    link.setAttribute('aria-label', text);
+    link.textContent = '';
+    text.split(' ').forEach(function (word, w) {
+      if (w) link.appendChild(doc.createTextNode(' '));
+      var wordEl = doc.createElement('span');
+      wordEl.className = 'split-word';
+      wordEl.setAttribute('aria-hidden', 'true');
+      Array.from(word).forEach(function (ch) {
+        var c = doc.createElement('span');
+        c.className = 'split-char';
+        c.style.setProperty('--i', i++);
+        c.textContent = ch;
+        wordEl.appendChild(c);
+      });
+      link.appendChild(wordEl);
+    });
+  }
+
+  // Animasyonu baştan oynatır; aktif bölümün bağlantısı oynamaz
+  function rollChars(link) {
+    if (link.classList.contains('is-active')) return;
+    link.classList.remove('is-rolling');
+    void link.offsetWidth;
+    link.classList.add('is-rolling');
+  }
+
+  if (!reduceMotion) {
+    doc.querySelectorAll('.nav__link, .mobile-menu__link').forEach(function (link) {
+      splitChars(link);
+      link.addEventListener('pointerdown', function () { rollChars(link); });
+      link.addEventListener('animationend', function (e) {
+        if (e.target === link.lastElementChild.lastElementChild) link.classList.remove('is-rolling');
+      });
+    });
+  }
+
   /* ---------- Aktif bölüm vurgusu ---------- */
   var links = Array.prototype.slice.call(doc.querySelectorAll('.nav__link, .mobile-menu__link'));
   var sections = ['top', 'product_1', 'product_2', 'faq', 'contact']

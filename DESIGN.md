@@ -62,6 +62,14 @@ parçacıklarda da hiçbir yerde kullanılmaz.
 - **Solution Art:** each solution's visual area holds a particle drawing next to its chart (same engine as K2), on the outer edge: Elektrik Yükü → electricity distribution pole (crossarms, insulators, transformer, short wires fading into space) left of the chart; Üretim → wind turbine with slowly rotating blades right of the chart. Art and chart share a baseline (art is taller); columns 2fr:3fr. Under 900px the art stacks above the chart. No "Çözüm 01/02" labels.
 - **Charts:** white solid actual line, lavender dashed POT forecast, violet triangles on each period's forecast peak; drawn left to right with a scan line when scrolled into view (js/charts.js).
 
+## Motion — menü harfleri (2026-10-09, kaynak: dala.craftedbygc.com)
+- `.nav__link` ve `.mobile-menu__link` metni harflere bölünür (main.js `splitChars`). Basınca
+  (pointerdown) harfler sırayla yukarı yuvarlanır, bir satır altındaki `text-shadow` kopyası
+  yerine gelir (0.5s, power1.out, harf başına 35ms). Aktif bölümün linki oynamaz.
+- Menü linkleri bölüme normal yumuşak kaydırmayla gider. Dala'nın geçiş perdesi ve hover
+  zıplaması denendi, kullanıcı istemedi: ekleme.
+- `prefers-reduced-motion: reduce` açıksa harf animasyonu çalışmaz.
+
 ## Do
 - Accent only for small things (labels, links, focus); buttons are liquid glass, not violet fills
 - Typography rules: see the Typography section (apple-design scale)
