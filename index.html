@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POT — Prediction On Top</title>
+  <meta name="description" content="Geleceğe Enerji Veren Tahminler. Elektrik Yükü Talep Tahmini ve Üretim Tahmini Çözümleri.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">İçeriğe geç</a>
+
+  <!-- Liquid Glass buton filtresi: .btn::before arkadaki içeriği bununla büker -->
+  <svg class="glass-filter" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="container-glass" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="1" result="turbulence"/>
+      <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="70" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+      <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur"/>
+      <feComposite in="finalBlur" in2="finalBlur" operator="over"/>
+    </filter>
+  </svg>
+
+  <!-- Sayfa boyunca süzülen seyrek üçgen parçacıklar -->
+  <canvas class="ambient" aria-hidden="true"></canvas>
+
+  <!-- ============ NAVİGASYON ============ -->
+  <header class="nav" data-nav>
+    <div class="container nav__inner">
+      <a class="nav__logo" href="#top" aria-label="POT — Anasayfa">
+        <img src="assets/logo.png" alt="POT" width="1089" height="442">
+      </a>
+
+      <nav class="nav__links" aria-label="Ana menü">
+        <a class="nav__link" href="#top">Anasayfa</a>
+        <a class="nav__link" href="#product_1">Elektrik Yükü Talep Tahmini</a>
+        <a class="nav__link" href="#product_2">Üretim Tahmini</a>
+        <a class="nav__link" href="#faq">S.S.S.</a>
+        <a class="nav__link" href="#contact">İletişim</a>
+      </nav>
+
+      <button class="nav__toggle" type="button" aria-label="Menü" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav class="container mobile-menu__inner" aria-label="Mobil menü">
+      <a class="mobile-menu__link" href="#top">Anasayfa</a>
+      <a class="mobile-menu__link" href="#product_1">Elektrik Yükü Talep Tahmini</a>
+      <a class="mobile-menu__link" href="#product_2">Üretim Tahmini</a>
+      <a class="mobile-menu__link" href="#faq">S.S.S.</a>
+      <a class="mobile-menu__link" href="#contact">İletişim</a>
+    </nav>
+  </div>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="container">
+        <div class="hero__copy">
+          <h1 class="t-display hero__title" data-reveal>Geleceğe Enerji Veren Tahminler</h1>
+          <p class="t-label hero__label" lang="en" data-reveal style="--d:.1s">PREDICTION ON TOP</p>
+          <p class="t-body hero__sub" data-reveal style="--d:.15s">Elektrik Yükü Talep Tahmini ve Üretim Tahmini Çözümleri</p>
+          <div data-reveal style="--d:.2s">
+            <a class="btn" href="#product_1">
+              Daha Fazla Bilgi
+              <svg class="btn__arrow" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1.5 7.5 7 13l5.5-5.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <canvas data-constellation="mountain" aria-hidden="true"></canvas>
+      </div>
+    </section>
+
+    <!-- ============ ÜRÜN 1 ============ -->
+    <section class="section product" id="product_1">
+      <div class="container">
+        <header class="product__head">
+          <h2 class="t-heading-lg product__title" data-reveal>Elektrik Yükü Talep Tahmini</h2>
+        </header>
+
+        <div class="grid product__body">
+          <figure class="product__visual" data-reveal>
+            <div class="product__art">
+              <canvas data-constellation="pole" aria-hidden="true"></canvas>
+            </div>
+            <div class="chart" data-chart="load" data-label="Bir haftalık gerçekleşen tüketim ve POT tahmini"></div>
+            <figcaption class="legend">
+              <span class="legend__item"><span class="legend__swatch"></span>Gerçekleşen tüketim</span>
+              <span class="legend__item"><span class="legend__swatch legend__swatch--dashed"></span>POT tahmini</span>
+            </figcaption>
+          </figure>
+
+          <div class="product__text">
+            <p class="t-body" data-reveal>POT elektrik piyasasında elektrik dağıtım faaliyeti yürüten dağıtım şirketlerinin, bölgelerinde gerçekleşecek elektrik tüketimini saatlik periyotta tahmin etmektedir.</p>
+            <p class="t-body t-muted" data-reveal>POT veri analitiği, machine learning ve istatistiksel yöntemler kullanır. Böylece farklı tahmin modelleri ve sonuçlar üreterek kullanıcıya en uygun tahminleri üretebilmesi için geniş bir vizyon sağlar.</p>
+
+            <ul class="bullets" data-reveal>
+              <li>POT Gün Öncesi Piyasası (GÖP) kapsamında talep tahmini hata oranlarının düşmesine yardımcı olacak modelleriyle kullanıcılara hizmet vermektedir.</li>
+              <li>POT kullanıcılara talep tahmini operasyonunda kullanacakları veri setlerine kolayca ulaşım imkânı sağlamaktadır.</li>
+              <li>POT istatistiki modeller ve bilimsel çalışmalar neticesinde oluşturduğu analizlerle ve kullanıcı isterleri doğrultusunda tasarlanan raporlar ile kullanıcılara detaylı analiz ortamı sağlamaktadır.</li>
+            </ul>
+
+            <div data-reveal>
+              <a class="btn" href="#contact" data-solution="Elektrik Yükü Talep Tahmini">Bilgi Al</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ÜRÜN 2 ============ -->
+    <section class="section product product--reverse" id="product_2">
+      <div class="container">
+        <header class="product__head">
+          <h2 class="t-heading-lg product__title" data-reveal>Üretim Tahmini</h2>
+        </header>
+
+        <div class="grid product__body">
+          <figure class="product__visual" data-reveal>
+            <div class="product__art">
+              <canvas data-constellation="turbine" aria-hidden="true"></canvas>
+            </div>
+            <div class="chart" data-chart="wind" data-label="Gerçekleşen üretim ve POT tahmini"></div>
+            <figcaption class="legend">
+              <span class="legend__item"><span class="legend__swatch"></span>Gerçekleşen üretim</span>
+              <span class="legend__item"><span class="legend__swatch legend__swatch--dashed"></span>POT tahmini</span>
+            </figcaption>
+          </figure>
+
+          <div class="product__text">
+            <p class="t-body" data-reveal>POT elektrik üretim alanında faaliyet gösteren RES piyasa katılımcılarına Gün Öncesi Piyasası (GÖP) daha aktif ve verimli rol oynayabilmeleri için geliştirilmiştir.</p>
+            <p class="t-body t-muted" data-reveal>POT piyasa katılımcılarının analitik ihtiyaçlarını karşılayarak Gün Öncesi Piyasası operasyonel işlemlerin daha güvenli, etkin, ekonomik ve sürdürülebilir biçimde yürütülmesine destek olur.</p>
+
+            <div data-reveal>
+              <a class="btn" href="#contact" data-solution="Üretim Tahmini">Bilgi Al</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEDEN POT ============ -->
+    <section class="section features" id="why">
+      <div class="container">
+        <p class="t-label features__label" data-reveal>NEDEN POT</p>
+
+        <ol class="features__list">
+          <li class="feature" data-reveal>
+            <span class="feature__num">01</span>
+            <h3 class="t-heading feature__title">Doğru ve Kararlı Tahminler</h3>
+            <p class="t-body t-muted feature__desc">Sürekli geliştirilen ve gelişen modeller ile en doğru tahminlere ulaşın</p>
+          </li>
+          <li class="feature" data-reveal>
+            <span class="feature__num">02</span>
+            <h3 class="t-heading feature__title">Enerjinin Geleceği İçin Tasarlandı</h3>
+            <p class="t-body t-muted feature__desc">POT bir uygulamadan fazlasıdır, enerji dünyasındaki arz talep zorluklarını ele almak için tasarlanmıştır</p>
+          </li>
+          <li class="feature" data-reveal>
+            <span class="feature__num">03</span>
+            <h3 class="t-heading feature__title">Kolay Kullanım</h3>
+            <p class="t-body t-muted feature__desc">Tüm tahmin operasyonlarını kolaylıkla yapın, karşılaştırma ve analizler için gerekli verilere kolayca ulaşın.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ K2 YAKLAŞIMI ============ -->
+    <section class="section approach" id="approach">
+      <div class="container grid approach__grid">
+        <div class="approach__visual">
+          <canvas data-constellation="k2" aria-hidden="true"></canvas>
+        </div>
+        <div class="approach__text">
+          <p class="t-label" data-reveal>K2</p>
+          <p class="t-heading-xs approach__statement" data-reveal style="--d:.08s">POT (Prediction on Top), tahmin üretme işini dünyanın en zorlu dağı olan K2’ye tırmanmaya benzeten bir yaklaşımın ürünüdür. Tıpkı K2’nin zirvesine ulaşmanın ustalık, azim ve ileri seviye bilgi gerektirdiği gibi, tahmin üretmekte aynı özen ve zorlu süreçleri içerir. Bu yaklaşımlar ile yapılan çalışmalar ile POT, tahminlerimizin en yüksek doğrulukla zirveye yerleşeceğinin bir simgesidir.</p>
+          <p class="t-body t-muted approach__note" data-reveal style="--d:.16s">Modeller, uzun yıllara dayanan elektrik piyasası tecrübesine sahip uzman veri analistleri ve akademisyenlerin bilimsel çalışmalarıyla üretiliyor.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REFERANS ============ -->
+    <section class="section reference" id="reference">
+      <div class="container grid reference__grid">
+        <div class="reference__brand" data-reveal>
+          <p class="t-label">REFERANS</p>
+          <img class="reference__logo" src="assets/oedas.svg" alt="OEDAŞ — Osmangazi Elektrik Dağıtım" width="268" height="71">
+        </div>
+        <div class="reference__text">
+          <p class="t-heading-lg reference__statement" data-reveal style="--d:.08s">Bölge enerji talebini POT ile tahmin ediyor.</p>
+          <p class="t-body t-muted reference__poc" data-reveal style="--d:.16s">Elektrik piyasasının farklı katılımcılarıyla çalışmalar sürüyor.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ S.S.S. ============ -->
+    <section class="section faq" id="faq">
+      <div class="container grid faq__grid">
+        <div class="faq__head">
+          <h2 class="t-heading-lg" data-reveal>Sıkça Sorulan Sorular</h2>
+        </div>
+
+        <div class="faq__list">
+          <div class="faq__item" data-reveal>
+            <h3>
+              <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">
+                <span class="faq__num">01</span>
+                <span class="t-heading-2xs faq__question">POT’un özel bir altyapıya ihtiyacı var mıdır?</span>
+                <span class="faq__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1">
+              <div><p class="t-body t-muted">POT, SaaS bir çözüm olarak herhangi bir özel altyapı ihtiyacı olmadan hızlı bir şekilde devreye alınabilir. Kullanıcılar, platforma kolayca erişerek ihtiyaç duydukları talep tahmin ve üretim tahminleme süreçlerini vakit kaybetmeden başlatabilirler.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item" data-reveal>
+            <h3>
+              <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
+                <span class="faq__num">02</span>
+                <span class="t-heading-2xs faq__question">POT talep tahmini üretmek için hangi verilere ihtiyaç duyar?</span>
+                <span class="faq__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2">
+              <div><p class="t-body t-muted">POT, talep tahmini süreçlerinde geçmiş saatlik elektrik tüketim verilerine ihtiyaç duymaktadır. Bu verilerin doğruluğu ve kalitesi, tahminlerin başarısını doğrudan etkileyen en önemli unsurlardandır. Güvenilir ve detaylı veri setleri, POT’un tahminleme algoritmalarını en üst düzeyde optimize ederek sonuçların doğruluğunu artırır ve karar destek süreçlerinde güçlü bir temel oluşturur.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item" data-reveal>
+            <h3>
+              <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
+                <span class="faq__num">03</span>
+                <span class="t-heading-2xs faq__question">POT üretim tahmini için hangi verilere ihtiyaç duyar?</span>
+                <span class="faq__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3">
+              <div><p class="t-body t-muted">POT, üretim tahmini süreçlerinde geçmiş saatlik üretim verilerine ve sayısal hava tahmin verilerine ihtiyaç duymaktadır. Bu verilerin temini, müşteri ile detaylı bir analiz süreci sonucunda gerçekleştirilir. Veri kalitesi, tahminlerin doğruluğunu ve güvenilirliğini doğrudan etkileyen kritik bir faktördür. Doğru ve güvenilir veriler, POT’un yüksek performanslı tahminleme algoritmalarını destekleyerek en iyi sonuçların elde edilmesini sağlar.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ İLETİŞİM ============ -->
+    <section class="section contact" id="contact">
+      <div class="container grid contact__grid">
+        <div class="contact__head">
+          <h2 class="t-heading-lg" data-reveal>Sorunuz mu var?</h2>
+          <p class="t-body t-muted contact__sub" data-reveal style="--d:.08s">Daha fazla bilgi için sizinle hemen iletişime geçeceğiz.</p>
+        </div>
+
+        <div class="contact__body" data-reveal style="--d:.12s">
+          <!-- Form, eski sitedeki gibi /api/contact adresine JSON gönderir. Uç noktayı data-endpoint ile değiştirin. -->
+          <form class="form" data-contact-form data-endpoint="/api/contact" novalidate>
+            <div class="field">
+              <label for="f-name">Ad Soyad <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="f-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-company">Kurum</label>
+              <input class="input" id="f-company" name="company" type="text" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="f-email">E-posta <span class="req" aria-hidden="true">*</span></label>
+              <input class="input" id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="f-phone">Telefon</label>
+              <input class="input" id="f-phone" name="phone" type="tel" autocomplete="tel">
+            </div>
+
+            <fieldset class="field field--full">
+              <legend>Bilgi İstenilen Çözüm</legend>
+              <div class="choices">
+                <label class="choice">
+                  <input type="radio" name="solution" value="Elektrik Yükü Talep Tahmini" checked>
+                  <span>Elektrik Yükü Talep Tahmini</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="solution" value="Üretim Tahmini">
+                  <span>Üretim Tahmini</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field field--full">
+              <label for="f-message">Mesajınız</label>
+              <textarea class="input" id="f-message" name="message" rows="4"></textarea>
+            </div>
+
+            <!-- Bot tuzağı: insanlar bu alanı görmez -->
+            <div class="hp" aria-hidden="true">
+              <label for="f-website">Web sitesi</label>
+              <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="field--full form__actions">
+              <button class="btn" type="submit"><span data-submit-label>Gönder</span></button>
+              <p class="form__status" role="alert" data-form-status></p>
+            </div>
+          </form>
+
+          <div class="form-success" data-form-success role="status" hidden>
+            <p class="t-heading">Mesajınız bize ulaştı.</p>
+            <p class="t-body t-muted">En kısa sürede sizinle iletişime geçeceğiz.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <p class="t-display footer__title" data-reveal>Geleceğin Enerjisi</p>
+        <div data-reveal style="--d:.1s">
+          <a class="btn" href="mailto:info@pot-ai.com">Hemen E-Posta Gönderin</a>
+        </div>
+      </div>
+
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img class="footer__logo" src="assets/logo.png" alt="POT" width="1089" height="442">
+        </div>
+        <div>
+          <p class="footer__heading">Çözümler</p>
+          <ul class="footer__links">
+            <li><a href="#product_1">Elektrik Yükü Talep Tahmini</a></li>
+            <li><a href="#product_2">Üretim Tahmini</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__heading">Site</p>
+          <ul class="footer__links">
+            <li><a href="#faq">S.S.S.</a></li>
+            <li><a href="#contact">İletişim</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__heading">İletişim</p>
+          <ul class="footer__links">
+            <li><a class="footer__email" href="mailto:info@pot-ai.com">info@pot-ai.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>POT © 2025. Her Hakkı Saklıdır.</p>
+        <p lang="en">PREDICTION ON TOP</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/particles.js" defer></script>
+  <script src="js/charts.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
