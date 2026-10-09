@@ -358,7 +358,13 @@
 
   Constellation.prototype.resize = function (initial) {
     var w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+    // Alan henüz boyutlanmadıysa bekle. Çizim de bekler (draw); yoksa dönen
+    // parçacıklar pivotsuz hesaplanıp NaN olur ve türbin kanatları kaybolur.
     if (!w || !h) return;
+    if (!this.ready) {
+      this.ready = true;
+      initial = true;
+    }
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.w = w;
     this.h = h;
@@ -458,6 +464,7 @@
   };
 
   Constellation.prototype.draw = function (t, k, dt) {
+    if (!this.ready) return;
     var ctx = this.ctx, ps = this.particles, m = this.mouse;
     var R = this.opts.repel || 90, R2 = R * R;
     var last = -1;
