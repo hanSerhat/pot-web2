@@ -62,6 +62,13 @@ parçacıklarda da hiçbir yerde kullanılmaz.
 - **Solution Art:** each solution's visual area holds a particle drawing next to its chart (same engine as K2), on the outer edge: Elektrik Yükü → electricity distribution pole (crossarms, insulators, transformer, short wires fading into space) left of the chart; Üretim → wind turbine with slowly rotating blades right of the chart. Art and chart share a baseline (art is taller); columns 2fr:3fr. Under 900px the art stacks above the chart. No "Çözüm 01/02" labels.
 - **Charts:** white solid actual line, lavender dashed POT forecast, violet triangles on each period's forecast peak; drawn left to right with a scan line when scrolled into view (js/charts.js).
 
+## Mobil (≤900px) — figürler metnin arkasında (2026-10-09)
+Parçacık figürleri mobilde ayrı yer kaplamaz, ilgili metnin arkasına geçer:
+- **Dağ:** giriş tam ekran; dağ 1.35 kat büyütülüp ortalanır (yanlar kırpılır), başlık ve buton önde.
+- **Direk / türbin:** bölüm başlığının arkasında; başlık çizimin tabanına oturur (`--art-h`).
+  Çizim bölüme göre konumlandığı için aradaki kutularda transform/`data-reveal` olmamalı.
+- **K2:** yazı metinle aynı ızgara hücresinde arkada, okunaklılık için %55 opaklık.
+
 ## Motion — menü harfleri (2026-10-09, kaynak: dala.craftedbygc.com)
 - `.nav__link` ve `.mobile-menu__link` metni harflere bölünür (main.js `splitChars`). Basınca
   (pointerdown) harfler sırayla yukarı yuvarlanır, bir satır altındaki `text-shadow` kopyası

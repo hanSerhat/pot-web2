@@ -372,6 +372,10 @@
     var aw = w - pl - pr, ah = h - pt - pb;
     var bw = aw, bh = bw / this.shape.aspect;
     if (bh > ah) { bh = ah; bw = bh * this.shape.aspect; }
+    // zoom > 1: alana sığan şekil büyütülür, taşan kenarlar kırpılır
+    var zoom = this.opts.zoom || 1;
+    bw *= zoom;
+    bh *= zoom;
     var ox = pl + (aw - bw) * (this.opts.alignX == null ? 0.5 : this.opts.alignX);
     var oy = pt + (ah - bh) * (this.opts.alignY == null ? 0.5 : this.opts.alignY);
     var sizeScale = clamp(bw / 700, 0.7, 1.15);
@@ -582,10 +586,13 @@
     if (hero) {
       var mobile = window.innerWidth <= 900;
       new Constellation(hero, mountain, {
+        // Mobilde dağ metnin arkasında: büyütülüp ortalanır, yanlardan kırpılır
         pad: mobile ? [0.04, 0.02, 0.04, 0.02] : [0.16, 0.05, 0.07, 0.1],
-        alignX: 1,
-        alignY: 1,
+        alignX: mobile ? 0.5 : 1,
+        alignY: mobile ? 0.6 : 1,
+        zoom: mobile ? 1.35 : 1,
         density: 1.7,
+        min: mobile ? 1100 : 400,
         max: 1700
       });
     }
