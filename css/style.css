@@ -622,10 +622,19 @@ main, .footer { position: relative; z-index: 1; }
 .approach__statement { margin-top: var(--spacing-18); }
 .approach__note { margin-top: var(--spacing-30); }
 
+/* Mobilde zirve çizgisi metnin arkasına geçer: ikisi aynı hücrede üst üste */
 @media (max-width: 900px) {
   .approach__visual,
-  .approach__text { grid-column: 1 / -1; }
-  .approach__visual { height: min(70vw, 380px); margin-bottom: var(--spacing-36); }
+  .approach__text { grid-column: 1; grid-row: 1; }
+  .approach__visual {
+    position: relative;
+    align-self: stretch;
+    height: auto;
+    /* Uzun metin okunaklı kalsın diye parçacıklar biraz geri çekilir */
+    opacity: 0.6;
+  }
+  .approach__visual canvas { position: absolute; inset: 0; }
+  .approach__text { position: relative; z-index: 1; }
 }
 
 /* ---------- Referans ---------- */
@@ -668,20 +677,9 @@ main, .footer { position: relative; z-index: 1; }
   height: 100%;
 }
 
-/* Mobilde metnin arkasında okunmuyor: S.S.S. ile iletişim arasında kendi alanında durur */
+/* Mobilde S.S.S. başlığından "Sorunuz mu var?"a uzanır, başlıkların arkasında */
 @media (max-width: 900px) {
-  .ask {
-    display: flex;
-    flex-direction: column;
-  }
-  .ask__layer {
-    position: relative;
-    inset: auto;
-    order: 1;
-    height: min(110vw, 440px);
-  }
-  .ask .faq { padding-bottom: var(--spacing-24); }
-  .ask .contact { order: 2; }
+  .ask__layer { bottom: 0; }
   .ask__visual { grid-column: 1 / -1; }
 }
 

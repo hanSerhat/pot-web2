@@ -768,13 +768,16 @@
     if (askCanvas) {
       var narrow = window.innerWidth <= 900;
       new Constellation(askCanvas, questionMark, {
-        pad: narrow ? [0.04, 0.1, 0.04, 0.1] : [0.02, 0.04, 0.02, 0.04],
-        zoom: narrow ? 1 : 1.18,
+        // Mobilde alan formun sonuna kadar uzar: şekil üstten hizalanır, genişliğe
+        // göre büyütülür; böylece S.S.S. başlığından "Sorunuz mu var?"a iner
+        pad: narrow ? [0, 0.1, 0, 0.1] : [0.02, 0.04, 0.02, 0.04],
+        alignY: narrow ? 0 : 0.5,
+        zoom: narrow ? 1.34 : 1.18,
         density: 1.8,
-        min: 700,
+        min: narrow ? 900 : 700,
         max: 1200,
         repel: 70,
-        alpha: 0.55,
+        alpha: narrow ? 0.5 : 0.55,
         stiff: 0.035,
         draw: 2.8,
         sway: [0.045, 0.45]
