@@ -105,13 +105,19 @@
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
-  /* ---------- S.S.S. akordeon ---------- */
-  doc.querySelectorAll('.faq__item').forEach(function (item) {
-    var btn = item.querySelector('.faq__q');
-    btn.addEventListener('click', function () {
-      var open = btn.getAttribute('aria-expanded') !== 'true';
-      btn.setAttribute('aria-expanded', String(open));
-      item.classList.toggle('is-open', open);
+  /* ---------- S.S.S. akordeon ----------
+     Aynı anda en fazla bir cevap açık: biri açılınca diğeri kapanır,
+     açık olana basınca kapanır. */
+  var faqItems = doc.querySelectorAll('.faq__item');
+
+  faqItems.forEach(function (item) {
+    item.querySelector('.faq__q').addEventListener('click', function () {
+      var opening = !item.classList.contains('is-open');
+      faqItems.forEach(function (it) {
+        var open = opening && it === item;
+        it.classList.toggle('is-open', open);
+        it.querySelector('.faq__q').setAttribute('aria-expanded', String(open));
+      });
     });
   });
 

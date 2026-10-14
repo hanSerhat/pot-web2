@@ -649,6 +649,42 @@ main, .footer { position: relative; z-index: 1; }
   .reference__text { margin-top: var(--spacing-36); }
 }
 
+/* ---------- Soru işareti: S.S.S. başlığından iletişime uzanır ---------- */
+.ask { position: relative; }
+.ask__layer {
+  position: absolute;
+  inset: var(--section-y) 0;
+  pointer-events: none;
+}
+.ask__layer .container { height: 100%; }
+.ask__visual {
+  position: relative;
+  grid-column: 1 / span 6;
+}
+.ask__visual canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobilde metnin arkasında okunmuyor: S.S.S. ile iletişim arasında kendi alanında durur */
+@media (max-width: 900px) {
+  .ask {
+    display: flex;
+    flex-direction: column;
+  }
+  .ask__layer {
+    position: relative;
+    inset: auto;
+    order: 1;
+    height: min(110vw, 440px);
+  }
+  .ask .faq { padding-bottom: var(--spacing-24); }
+  .ask .contact { order: 2; }
+  .ask__visual { grid-column: 1 / -1; }
+}
+
 /* ---------- S.S.S. ---------- */
 .faq__grid { align-items: start; }
 .faq__head {

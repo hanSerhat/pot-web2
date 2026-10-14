@@ -59,12 +59,16 @@ parçacıklarda da hiçbir yerde kullanılmaz.
 - **Section Headline Block:** title headline left; body Ink or Ink Muted; optional small Accent uppercase label above (not on solution sections).
 - **Navigation:** transparent at top, solid black on scroll. Logo left, links 14px regular weight, normal case — not uppercase (Ink Faint inactive, Ink active). No border.
 - **Ambient Particle Field:** scattered low-opacity outlined triangles across background.
-- **Solution Art:** each solution's visual area holds a particle drawing next to its chart (same engine as K2), on the outer edge: Elektrik Yükü → electricity distribution pole (crossarms, insulators, transformer, short wires fading into space) left of the chart; Üretim → wind turbine with slowly rotating blades right of the chart. Art and chart share a baseline (art is taller); columns 2fr:3fr. Under 900px the art stacks above the chart. No "Çözüm 01/02" labels.
+- **Solution Art:** each solution's visual area holds a particle drawing next to its chart (same engine as the K2 peak line), on the outer edge: Elektrik Yükü → electricity distribution pole (crossarms, insulators, transformer, short wires fading into space) left of the chart; Üretim → wind turbine with slowly rotating blades right of the chart. Art and chart share a baseline (art is taller); columns 2fr:3fr. Under 900px the art stacks above the chart. No "Çözüm 01/02" labels.
+- **K2 zirve çizgisi (2026-10-14):** K2 bölümündeki parçacık "K2" yazısı fazla göze battığı için kaldırıldı; ardından denenen kuşbakışı topografik harita da beğenilmedi. Şimdiki figür (`data-constellation="peak"`): soldan alçaktan başlayıp iniş çıkışlarla tırmanan, sağa yakın bir noktada keskin zirve yapıp hafifçe inen tek parçacık çizgisi. Renk yüksekliğe göre: dipte teal, ortada violet, zirvede beyaz. Zirvenin üstünde işaret yok (üçgen denendi, kullanıcı kaldırttı). Görününce soldan sağa çizilir (2.6 sn). Bölüm etiketi "K2" metin olarak kalır.
+- **Referans etiketi:** "REFERANSLAR" (çoğul).
+- **Soru işareti (2026-10-14):** S.S.S. ve iletişim `.ask` sarmalayıcısında; arkalarında parçacıklardan büyük bir "?" var (`data-constellation="question"`). Diğer figürlerden yumuşak: opaklık ×0.55, yavaş yay (stiff 0.035), renkler lavantadan maviye, nokta camgöbeği. Alan görününce kıvrımın tepesinden başlayıp kalemle yazılır gibi oluşur (2.8 sn), nokta en son gelir; sonra noktası etrafında ±2.5° yavaşça sallanır. Masaüstünde sol 6 kolonda, S.S.S. başlığının altından formun sonuna uzanır. Mobilde metnin arkasında okunmadığı için S.S.S. listesi ile "Sorunuz mu var?" arasında kendi alanında durur.
+- **S.S.S. akordeonu:** aynı anda en fazla bir cevap açık. Başka soruya basınca o açılır, önceki kapanır; açık olana basınca kapanır. Hepsi kapalı başlar, açık olanın artısı çarpıya döner.
 - **Charts:** white solid actual line, lavender dashed POT forecast, violet triangles on each period's forecast peak; drawn left to right with a scan line when scrolled into view (js/charts.js).
 
 ## Mobil (≤900px) — dağ başlığın arkasında (2026-10-09)
 - **Dağ:** giriş tam ekran; dağ 1.35 kat büyütülüp ortalanır (yanlar kırpılır), başlık ve buton önde.
-- **Direk / türbin ve K2:** kendi alanlarında, metnin üstünde durur. Metnin arkasına almak
+- **Direk / türbin ve K2 çizgisi:** kendi alanlarında, metnin üstünde durur. Metnin arkasına almak
   denendi, kullanıcı eski hâlini tercih etti: sadece dağ arkada.
 
 ## Motion — menü harfleri (2026-10-09, kaynak: dala.craftedbygc.com)

@@ -1,8 +1,9 @@
 /* ==========================================================================
    POT — Takımyıldız parçacıkları
    - Hero: üçgen parçacıklardan oluşan K2 dağı
-   - K2 bölümü: "K2" yazısını oluşturan parçacıklar
+   - K2 bölümü: tırmanıp bir noktada zirve yapan tek çizgi
    - Çözümler: elektrik dağıtım direği ve kanatları dönen rüzgar türbini
+   - S.S.S./İletişim: yazılarak oluşan, yavaşça sallanan soluk soru işareti
    - Ortam: sayfa boyunca süzülen seyrek üçgenler
    ========================================================================== */
 (function () {
@@ -185,25 +186,59 @@
     c.fill();
   }
 
-  function textShape(text, count) {
-    var family = getComputedStyle(document.body).fontFamily;
-    var size = 320;
-    var font = '600 ' + size + 'px ' + family;
-    var ctx = document.createElement('canvas').getContext('2d');
-    ctx.font = font;
-    var m = ctx.measureText(text);
-    var left = m.actualBoundingBoxLeft || 0;
-    var ascent = m.actualBoundingBoxAscent || size * 0.73;
-    var descent = m.actualBoundingBoxDescent || 0;
-    var w = Math.ceil(left + (m.actualBoundingBoxRight || m.width)) + 4;
-    var h = Math.ceil(ascent + descent) + 4;
-
-    return paintedShape(w, h, [{
-      paint: function (c) {
-        c.font = font;
-        c.fillText(text, left + 2, ascent + 2);
+  // Kırık çizgi üzerinde yay uzunluğuna göre nokta: at(s) → [x, y, tx, ty]
+  // (tx, ty: o noktadaki birim yön; dik kaydırma için kullanılır)
+  function polyline(line) {
+    var acc = [0];
+    for (var i = 1; i < line.length; i++) {
+      acc.push(acc[i - 1] + Math.hypot(line[i][0] - line[i - 1][0], line[i][1] - line[i - 1][1]));
+    }
+    return {
+      length: acc[acc.length - 1],
+      at: function (s) {
+        for (var j = 1; j < acc.length - 1 && acc[j] < s; j++);
+        var A = line[j - 1], B = line[j], len = acc[j] - acc[j - 1] || 1, f = (s - acc[j - 1]) / len;
+        return [A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f, (B[0] - A[0]) / len, (B[1] - A[1]) / len];
       }
-    }], count);
+    };
+  }
+
+  // K2 bölümü: soldan alçaktan başlayıp iniş çıkışlarla tırmanan, bir noktada
+  // keskin zirve yapıp hafifçe inen tek çizgi. Soldan sağa çizilir.
+  function peakLine(count) {
+    var W = 640, H = 400;
+    var line = [
+      [0, 370], [36, 352], [64, 364], [100, 326], [132, 338], [170, 296], [198, 310],
+      [236, 260], [262, 276], [300, 216], [326, 234], [362, 170], [388, 186],
+      [430, 64], [462, 132], [488, 116], [530, 170], [566, 156], [604, 198], [640, 188]
+    ];
+    var path = polyline(line), L = path.length;
+    var pts = [], i;
+
+    var nLoose = Math.round(count * 0.06);
+    var nLine = count - nLoose;
+
+    for (i = 0; i < nLine; i++) {
+      var s = Math.random() * L, q = path.at(s);
+      // İnce bant; bir kısmı çizginin çevresine dağılır: hafif hale
+      var halo = Math.random() < 0.12;
+      var off = gauss() * (halo ? 7 : 2.2);
+      var y = q[1] + q[2] * off;
+      pts.push({
+        x: (q[0] - q[3] * off) / W,
+        y: y / H,
+        c: spectrumIndex(clamp((y - 50) / 330, 0, 1) * 0.95, 0.8),
+        a: halo ? rand(0.25, 0.5) : rand(0.6, 1),
+        s: rand(1.4, 3.2),
+        d: s / L * 0.85
+      });
+    }
+
+    for (i = 0; i < nLoose; i++) {
+      pts.push(point(rand(-0.05, 1.05), rand(0, 1.05), 0.3, true));
+    }
+
+    return { aspect: W / H, points: pts };
   }
 
   // Elektrik dağıtım direği: konik direk, iki travers, izolatörler, trafo
@@ -321,6 +356,68 @@
     ], count, [hx, hy]);
   }
 
+  // Soru işareti: sol alttan tepeye çıkıp sağa dönen kıvrım, gövdeye inen
+  // S kavisi, kısa gövde ve nokta. d: parçacığın yol üzerindeki sırası (0–1);
+  // motor buna göre geciktirir, şekil kalemle yazılır gibi oluşur, nokta en son.
+  function questionMark(count) {
+    var W = 300, H = 470, cx = 150, cy = 128, R = 96, HW = 15;
+    var dot = [150, 418], DR = 22;
+    var line = [], i;
+
+    var a0 = Math.PI * 0.9, a1 = Math.PI * 2.28;
+    for (i = 0; i <= 60; i++) {
+      var a = a0 + (a1 - a0) * i / 60;
+      line.push([cx + Math.cos(a) * R, cy + Math.sin(a) * R]);
+    }
+    // Kavis, yayın ucundaki yönle başlar ve dik gövdeye teğet iner
+    var p0 = line[line.length - 1], p1 = [150, 253], p2 = [150, 300];
+    for (i = 1; i <= 24; i++) {
+      var u = i / 24, v = 1 - u;
+      line.push([v * v * p0[0] + 2 * v * u * p1[0] + u * u * p2[0], v * v * p0[1] + 2 * v * u * p1[1] + u * u * p2[1]]);
+    }
+    line.push([150, 345]);
+
+    var path = polyline(line), L = path.length;
+
+    var pts = [];
+    var nLoose = Math.round(count * 0.06);
+    var nDot = Math.round(count * 0.09);
+    var nLine = count - nLoose - nDot;
+
+    for (i = 0; i < nLine; i++) {
+      var s = Math.random() * L, q = path.at(s);
+      // Çoğu çizginin içinde, bir kısmı kenardan taşar: yumuşak hale
+      var off = (Math.random() < 0.8 ? rand(-1, 1) : gauss() * 1.1) * HW;
+      var d = s / L;
+      pts.push({
+        x: (q[0] - q[3] * off) / W,
+        y: (q[1] + q[2] * off) / H,
+        c: spectrumIndex(0.1 + d * 0.62, 1),
+        a: rand(0.45, 0.9),
+        s: rand(1.6, 3.6),
+        d: d * 0.84
+      });
+    }
+
+    for (i = 0; i < nDot; i++) {
+      var r = DR * Math.sqrt(Math.random()) * (Math.random() < 0.85 ? 1 : 1.3), t = Math.random() * TAU;
+      pts.push({
+        x: (dot[0] + Math.cos(t) * r) / W,
+        y: (dot[1] + Math.sin(t) * r) / H,
+        c: spectrumIndex(0.85, 0.8),
+        a: rand(0.55, 1),
+        s: rand(1.6, 3.6),
+        d: rand(0.92, 1)
+      });
+    }
+
+    for (i = 0; i < nLoose; i++) {
+      pts.push(point(rand(-0.1, 1.1), rand(-0.05, 1.05), 0.3, true));
+    }
+
+    return { aspect: W / H, points: pts, pivot: [dot[0] / W, dot[1] / H] };
+  }
+
   /* ---------- Takımyıldız motoru ---------- */
 
   function Constellation(canvas, shapeFn, opts) {
@@ -339,8 +436,8 @@
     this.shape = shapeFn(count);
     this.particles = this.shape.points.map(function (p) {
       return {
-        nx: p.x, ny: p.y, c: p.c, a: p.a, s: p.s, spin: !!p.spin,
-        x: 0, y: 0, hx: 0, hy: 0, rx: 0, ry: 0,
+        nx: p.x, ny: p.y, c: p.c, a: p.a, s: p.s, spin: !!p.spin, d: p.d || 0,
+        x: 0, y: 0, hx: 0, hy: 0, rx: 0, ry: 0, lx: 0, ly: 0,
         rot: Math.random() * TAU,
         vr: rand(-0.5, 0.5),
         ph: Math.random() * TAU,
@@ -402,7 +499,7 @@
         p.ry = p.hy - this.py;
       }
       if (reduceMotion) { p.x = p.hx; p.y = p.hy; }
-      else if (initial) { p.x = rand(0, w); p.y = rand(0, h); }
+      else if (initial) { p.x = p.lx = rand(0, w); p.y = p.ly = rand(0, h); }
     }
 
     if (reduceMotion) this.draw(0, 1, 0);
@@ -432,12 +529,18 @@
       document.documentElement.addEventListener('mouseleave', function () { self.mouse.x = self.mouse.y = -1e4; });
     }
 
-    // Yalnızca ekranda görünürken çalış
+    // Yalnızca ekranda görünürken çalış. Yazılarak oluşan şekil (opts.draw),
+    // alanın beşte biri görününce çizilmeye başlar; kullanıcı oluşumu kaçırmaz.
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
-        entries[0].isIntersecting ? self.start() : self.stop();
-      }, { threshold: 0.05 }).observe(this.canvas);
+        var en = entries[0];
+        en.isIntersecting ? self.start() : self.stop();
+        if (self.opts.draw && self.drawAt == null && en.intersectionRatio >= 0.2) {
+          self.drawAt = (performance.now() - self.t0) / 1000;
+        }
+      }, { threshold: this.opts.draw ? [0.05, 0.2] : 0.05 }).observe(this.canvas);
     } else {
+      this.drawAt = 0;
       this.start();
     }
   };
@@ -458,7 +561,7 @@
     this.last = now;
     var t = (now - this.t0) / 1000;
     // Açılışta yaylar gevşek başlar ve sıkılaşır: parçacıklar dağılmış hâlden dağı oluşturur
-    var k = Math.min(0.06, 0.01 + t * 0.022);
+    var k = Math.min(this.opts.stiff || 0.06, 0.01 + t * 0.022);
     this.draw(t, 1 - Math.pow(1 - k, dt), dt);
     requestAnimationFrame(this.frame);
   };
@@ -472,6 +575,13 @@
     var cs = Math.cos(angle), sn = Math.sin(angle);
     // Dönen parçacıklar hedefe daha sıkı bağlı: kanat dönerken iz bırakıp bükülmesin
     var kSpin = Math.min(1, k * 4);
+    // Salınım: tüm şekil pivot etrafında yavaşça bir yana bir yana eğilir
+    var sway = reduceMotion ? null : this.opts.sway;
+    var sa = sway ? Math.sin(t * sway[1]) * sway[0] : 0;
+    var sc = Math.cos(sa), ss = Math.sin(sa);
+    var drawDur = reduceMotion ? 0 : this.opts.draw || 0;
+    var td = this.drawAt == null ? -1 : t - this.drawAt;
+    var soft = this.opts.alpha || 1;
 
     ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.clearRect(0, 0, this.w, this.h);
@@ -479,11 +589,22 @@
 
     for (var i = 0; i < ps.length; i++) {
       var p = ps[i];
-      var tx = p.hx, ty = p.hy, alpha = p.a, kp = k;
+      var tx = p.hx, ty = p.hy, alpha = p.a * soft, kp = k;
       if (p.spin) {
         tx = this.px + p.rx * cs - p.ry * sn;
         ty = this.py + p.rx * sn + p.ry * cs;
         kp = kSpin;
+      }
+      if (sway) {
+        var ox = tx - this.px, oy = ty - this.py;
+        tx = this.px + ox * sc - oy * ss;
+        ty = this.py + ox * ss + oy * sc;
+      }
+      // Sırası gelmemiş parçacık başladığı yerde soluk bekler
+      if (drawDur && td < p.d * drawDur) {
+        tx = p.lx;
+        ty = p.ly;
+        alpha *= 0.4;
       }
 
       if (!reduceMotion) {
@@ -604,14 +725,16 @@
       });
     }
 
-    var k2 = document.querySelector('canvas[data-constellation="k2"]');
-    if (k2) {
-      // Yazı şekli sistem yazı tipinden örneklenir; indirme beklemeye gerek yok
-      new Constellation(k2, function (n) { return textShape('K2', n); }, {
-        pad: [0.12, 0.08, 0.12, 0.08],
-        density: 1.5,
-        max: 1200,
-        repel: 70
+    var peakCanvas = document.querySelector('canvas[data-constellation="peak"]');
+    if (peakCanvas) {
+      new Constellation(peakCanvas, peakLine, {
+        pad: [0.06, 0.04, 0.06, 0.04],
+        density: 1.6,
+        min: 700,
+        max: 1100,
+        repel: 70,
+        stiff: 0.045,
+        draw: 2.6
       });
     }
 
@@ -637,6 +760,24 @@
         max: 1600,
         repel: 70,
         spin: 0.45
+      });
+    }
+
+    // S.S.S.'den iletişime uzanan soru işareti: diğerlerinden soluk ve yavaş
+    var askCanvas = document.querySelector('canvas[data-constellation="question"]');
+    if (askCanvas) {
+      var narrow = window.innerWidth <= 900;
+      new Constellation(askCanvas, questionMark, {
+        pad: narrow ? [0.04, 0.1, 0.04, 0.1] : [0.02, 0.04, 0.02, 0.04],
+        zoom: narrow ? 1 : 1.18,
+        density: 1.8,
+        min: 700,
+        max: 1200,
+        repel: 70,
+        alpha: 0.55,
+        stiff: 0.035,
+        draw: 2.8,
+        sway: [0.045, 0.45]
       });
     }
   }
